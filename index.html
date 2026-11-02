@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaparrita</title>
+
+</head>
+<body>
+    <header>
+        <h1>Chaparrita</h1>
+        <p>La chaparrita es mi ave.</p>
+
+        <nav>
+            <button onclick="irA('quienn')">¿Quién es?</button>
+            <button onclick="irA('Cuando')">¿Cuando la conocí?</button>
+            <button onclick="irA('Hermosa')">Su belleza</button>
+            
+        </nav>
+    </header>
+
+
+
+    <main>
+        <section id="quienn">
+            <h2>¿Quién es?</h2>
+            <p>La chaparrita es una ave pequeña y adorableeeeee. Su plumaje es colorido y en general muy hermosa, me encanta su plumaje pero es muy miedosa.</p>
+            
+        </section>
+        <section id="Cuando">
+            <h2>¿Cuándo la conocí?</h2>
+            <p>La conocí hace 3 dias, mi papa me la trajo.</p>
+        </section>
+        <section id="Hermosa">
+            <h2>Su belleza</h2>
+            <p>Es una ave muy hermosa, con un plumaje colorido y miedosa .</p>
+        </section>
+            <script>
+                function IrA(idseccion) {
+                    
+                    const elemento = document.getElementById(idseccion);
+                    if (elemento) {
+                        elemento.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            </script>
+        
+    </main>
+</body>
+</html>

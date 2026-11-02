@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#06130e">
+    <title>Chaparrita</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,800;1,9..144,500&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================
+           CHAPARRITA · el perico atolero
+           ========================================================== */
+
+        /* ---------- Propiedades tipadas (permiten animar gradientes) ---------- */
+        @property --ang { syntax: '<angle>';  initial-value: 0deg;  inherits: false; }
+        @property --hue { syntax: '<number>'; initial-value: 150;   inherits: true;  }
+
+        /* ---------- Tokens de diseño ---------- */
+        :root {
+            --bg:    #06130e;
+            --ink:   #eafff3;
+            --mute:  #9fc4b2;
+            --verde: #3ddc84;
+            --lima:  #c8f542;
+            --turq:  #22d3c5;
+            --azul:  #3b82f6;
+            --sol:   #ffb454;
+
+            --radio: 32px;
+            --suave: cubic-bezier(.2, .8, .2, 1);
+            --titulo: "Fraunces", Georgia, serif;
+            --texto:  "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+            color-scheme: dark;
+            animation: respira-color 24s ease-in-out infinite alternate;
+        }
+        @keyframes respira-color { to { --hue: 200; } }
+
+        /* ---------- Base ---------- */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 6rem;
+            scrollbar-color: var(--verde) var(--bg);
+            scrollbar-width: thin;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: var(--texto);
+            font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
+            line-height: 1.7;
+            color: var(--ink);
+            background: var(--bg);
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--lima); color: #05210f; }
+
+        /* ---------- Aurora viva de fondo ---------- */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: -25%;
+            z-index: -2;
+            background:
+                radial-gradient(38% 38% at 18% 22%, hsl(var(--hue) 85% 42% / .55), transparent 70%),
+                radial-gradient(34% 34% at 82% 18%, hsl(calc(var(--hue) + 70) 90% 50% / .45), transparent 70%),
+                radial-gradient(40% 40% at 70% 82%, hsl(calc(var(--hue) - 50) 90% 45% / .40), transparent 70%),
+                radial-gradient(30% 30% at 20% 85%, hsl(calc(var(--hue) + 120) 80% 55% / .30), transparent 70%);
+            filter: blur(50px) saturate(130%);
+            animation: deriva 28s ease-in-out infinite alternate;
+        }
+        @keyframes deriva {
+            from { transform: translate3d(-3%, -2%, 0) rotate(0deg)  scale(1);    }
+            to   { transform: translate3d( 3%,  3%, 0) rotate(14deg) scale(1.15); }
+        }
+
+        /* ---------- Grano de película (textura) ---------- */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: .09;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        }
+
+        /* ---------- Barra de progreso de scroll ---------- */
+        .progreso {
+            position: fixed;
+            inset: 0 0 auto 0;
+            height: 4px;
+            z-index: 100;
+            transform-origin: left;
+            transform: scaleX(0);
+            background: linear-gradient(90deg, var(--lima), var(--verde), var(--turq), var(--azul));
+            box-shadow: 0 0 18px var(--verde);
+        }
+
+        /* ==========================================================
+           HERO
+           ========================================================== */
+        header {
+            position: relative;
+            min-height: 100svh;
+            max-width: 1200px;
+            margin-inline: auto;
+            padding: clamp(6rem, 12vh, 9rem) clamp(1.25rem, 5vw, 3rem) 4rem;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            align-items: center;
+            gap: clamp(1rem, 4vw, 4rem);
+        }
+
+        .hero-texto { position: relative; z-index: 2; }
+
+        .etiqueta {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            padding: .45rem 1rem .45rem .8rem;
+            border-radius: 999px;
+            font-size: .85rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--lima);
+            background: color-mix(in oklab, var(--verde) 14%, transparent);
+            border: 1px solid color-mix(in oklab, var(--verde) 35%, transparent);
+            backdrop-filter: blur(10px);
+        }
+        .etiqueta i {
+            width: .6rem; aspect-ratio: 1; border-radius: 50%;
+            background: var(--lima);
+            box-shadow: 0 0 0 0 var(--lima);
+            animation: pulso 2s infinite;
+        }
+        @keyframes pulso {
+            0%   { box-shadow: 0 0 0 0   color-mix(in oklab, var(--lima) 70%, transparent); }
+            100% { box-shadow: 0 0 0 .9rem transparent; }
+        }
+
+        h1 {
+            margin: 1rem 0 .5rem;
+            font-family: var(--titulo);
+            font-weight: 800;
+            font-size: clamp(3.4rem, 11vw, 9rem);
+            line-height: .88;
+            letter-spacing: -.045em;
+            background: linear-gradient(100deg, var(--lima), var(--verde), var(--turq), var(--azul), var(--lima));
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+                    background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: brillo 8s linear infinite;
+            filter: drop-shadow(0 8px 40px color-mix(in oklab, var(--verde) 40%, transparent));
+        }
+        @keyframes brillo { to { background-position: -300% 0; } }
+
+        header .hero-texto > p {
+            max-width: 32ch;
+            margin: 0;
+            font-size: clamp(1.2rem, 1rem + 1.2vw, 1.8rem);
+            font-weight: 300;
+            color: var(--mute);
+        }
+
+        .desliza {
+            display: inline-flex; align-items: center; gap: .8rem;
+            margin-top: 3rem;
+            font-size: .8rem; letter-spacing: .25em; text-transform: uppercase;
+            color: var(--mute);
+        }
+        .desliza::after {
+            content: "";
+            width: 1.4rem; height: 2.4rem;
+            border: 2px solid var(--mute);
+            border-radius: 1rem;
+            background:
+                radial-gradient(circle .22rem at 50% .55rem, var(--lima) 98%, transparent) no-repeat;
+            animation: rueda 1.8s var(--suave) infinite;
+        }
+        @keyframes rueda { 50% { background-position: 0 .7rem; } }
+
+        /* ---------- La ave ---------- */
+        .ave {
+            position: relative;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            z-index: 1;
+        }
+        /* aura giratoria detrás de la ave */
+        .ave::before {
+            content: "";
+            position: absolute;
+            width: 92%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background:
+                conic-gradient(from var(--ang),
+                    transparent, var(--turq), var(--lima), transparent 55%, var(--azul), transparent);
+            -webkit-mask: radial-gradient(circle, transparent 58%, #000 59%, #000 60%, transparent 61%);
+                    mask: radial-gradient(circle, transparent 58%, #000 59%, #000 60%, transparent 61%);
+            animation: giro 9s linear infinite;
+            opacity: .9;
+        }
+        .ave::after {
+            content: "";
+            position: absolute;
+            width: 78%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%,
+                color-mix(in oklab, var(--lima) 32%, transparent),
+                color-mix(in oklab, var(--turq) 14%, transparent) 55%,
+                transparent 72%);
+            box-shadow: inset 0 0 80px color-mix(in oklab, var(--verde) 25%, transparent);
+            backdrop-filter: blur(6px);
+        }
+        @keyframes giro { to { --ang: 360deg; } }
+
+        .ave svg {
+            position: relative;
+            z-index: 1;
+            width: min(100%, 520px);
+            height: auto;
+            overflow: visible;
+            filter: drop-shadow(0 30px 40px rgb(0 0 0 / .45));
+            animation: flota 6s ease-in-out infinite;
+        }
+        @keyframes flota {
+            0%, 100% { transform: translateY(0)    rotate(-1deg); }
+            50%      { transform: translateY(-14px) rotate(1.5deg); }
+        }
+        .ave .ojo {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: parpadeo 5.5s infinite;
+        }
+        @keyframes parpadeo {
+            0%, 92%, 100% { transform: scaleY(1); }
+            95%           { transform: scaleY(.05); }
+        }
+        .ave .cabeza {
+            transform-box: fill-box;
+            transform-origin: 30% 90%;
+            animation: ladea 7s ease-in-out infinite;
+        }
+        @keyframes ladea {
+            0%, 100% { transform: rotate(0deg); }
+            30%      { transform: rotate(-5deg); }
+            60%      { transform: rotate(4deg); }
+        }
+
+        /* ---------- Plumas que caen ---------- */
+        .plumas { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+        .plumas span {
+            position: absolute;
+            top: -10%;
+            left: var(--x);
+            width: calc(10px * var(--s));
+            height: calc(46px * var(--s));
+            border-radius: 100% 0 100% 0;
+            background: linear-gradient(160deg, var(--lima), var(--verde) 55%, var(--turq));
+            opacity: .0;
+            filter: blur(.3px);
+            animation: cae var(--t) linear var(--d) infinite;
+        }
+        .plumas span:nth-child(1) { --x:  8%; --s: 1.1; --t: 13s; --d: 0s;   }
+        .plumas span:nth-child(2) { --x: 22%; --s: .7;  --t: 17s; --d: 3s;   }
+        .plumas span:nth-child(3) { --x: 41%; --s: 1;   --t: 15s; --d: 6s;   }
+        .plumas span:nth-child(4) { --x: 58%; --s: .8;  --t: 19s; --d: 1.5s; }
+        .plumas span:nth-child(5) { --x: 76%; --s: 1.3; --t: 14s; --d: 8s;   }
+        .plumas span:nth-child(6) { --x: 90%; --s: .6;  --t: 18s; --d: 4.5s; }
+        @keyframes cae {
+            0%   { transform: translate3d(0, 0, 0) rotate(0deg);          opacity: 0;  }
+            10%  { opacity: .55; }
+            50%  { transform: translate3d(40px, 55vh, 0) rotate(160deg); }
+            90%  { opacity: .4; }
+            100% { transform: translate3d(-30px, 112vh, 0) rotate(340deg); opacity: 0; }
+        }
+
+        /* ==========================================================
+           NAV · dock flotante de cristal
+           ========================================================== */
+        nav {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            translate: -50% 0;
+            z-index: 90;
+            display: flex;
+            gap: .25rem;
+            padding: .4rem;
+            border-radius: 999px;
+            background: color-mix(in oklab, #0a2118 62%, transparent);
+            backdrop-filter: blur(18px) saturate(160%);
+            border: 1px solid rgb(255 255 255 / .12);
+            box-shadow:
+                0 10px 40px rgb(0 0 0 / .45),
+                inset 0 1px 0 rgb(255 255 255 / .12);
+            animation: baja-nav .9s var(--suave) both .3s;
+        }
+        @keyframes baja-nav { from { translate: -50% -140%; opacity: 0; } }
+
+        nav button {
+            appearance: none;
+            border: 0;
+            cursor: pointer;
+            font: 600 .95rem/1 var(--texto);
+            color: var(--ink);
+            padding: .8rem 1.25rem;
+            border-radius: 999px;
+            background: transparent;
+            transition: background .35s var(--suave), color .35s, transform .35s var(--suave), opacity .35s;
+        }
+        nav button:hover {
+            background: linear-gradient(120deg, var(--lima), var(--verde));
+            color: #04210f;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 22px color-mix(in oklab, var(--verde) 45%, transparent);
+        }
+        nav:has(button:hover) button:not(:hover) { opacity: .5; }
+        nav button:active { transform: scale(.96); }
+        nav button:focus-visible { outline: 2px solid var(--lima); outline-offset: 2px; }
+
+        /* ==========================================================
+           SECCIONES · tarjetas de cristal con borde cónico
+           ========================================================== */
+        main {
+            max-width: 1100px;
+            margin-inline: auto;
+            padding: 2rem clamp(1.25rem, 5vw, 3rem) 8rem;
+            display: grid;
+            gap: clamp(2rem, 6vw, 4.5rem);
+            counter-reset: seccion;
+            perspective: 1400px;
+        }
+
+        section {
+            counter-increment: seccion;
+            container-type: inline-size;
+            position: relative;
+            isolation: isolate;
+            padding: clamp(1.8rem, 5vw, 3.5rem);
+            border-radius: var(--radio);
+            background:
+                linear-gradient(145deg, rgb(255 255 255 / .09), rgb(255 255 255 / .02)),
+                color-mix(in oklab, #0b2a1d 45%, transparent);
+            backdrop-filter: blur(22px) saturate(150%);
+            box-shadow:
+                0 30px 80px rgb(0 0 0 / .45),
+                inset 0 1px 0 rgb(255 255 255 / .14);
+            transition: transform .6s var(--suave), box-shadow .6s var(--suave);
+        }
+        section:nth-of-type(even) { margin-left: clamp(0rem, 8vw, 6rem); }
+        section:nth-of-type(odd)  { margin-right: clamp(0rem, 8vw, 6rem); }
+
+        section:hover {
+            transform: translateY(-8px) rotateX(2deg);
+            box-shadow:
+                0 40px 100px rgb(0 0 0 / .55),
+                0 0 80px color-mix(in oklab, var(--verde) 22%, transparent),
+                inset 0 1px 0 rgb(255 255 255 / .2);
+        }
+
+        /* borde cónico animado */
+        section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            padding: 1.5px;
+            border-radius: inherit;
+            background: conic-gradient(from var(--ang),
+                transparent 0 55%, var(--turq), var(--lima), var(--verde), transparent 92%);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+                    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+            animation: giro 7s linear infinite;
+        }
+
+        /* número gigante en contorno */
+        section::after {
+            content: "0" counter(seccion);
+            position: absolute;
+            top: -.35em;
+            right: .15em;
+            z-index: -1;
+            font-family: var(--titulo);
+            font-weight: 800;
+            font-size: clamp(6rem, 18vw, 12rem);
+            line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1.5px color-mix(in oklab, var(--verde) 45%, transparent);
+            background: linear-gradient(180deg, color-mix(in oklab, var(--verde) 18%, transparent), transparent 70%);
+            -webkit-background-clip: text;
+                    background-clip: text;
+            pointer-events: none;
+            transition: transform .8s var(--suave);
+        }
+        section:hover::after { transform: translateY(14px) scale(1.05); }
+
+        h2 {
+            margin: 0 0 1rem;
+            font-family: var(--titulo);
+            font-weight: 800;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: 1;
+            letter-spacing: -.03em;
+            width: fit-content;
+            background: linear-gradient(100deg, #fff, var(--lima) 60%, var(--verde));
+            -webkit-background-clip: text;
+                    background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        h2::after {
+            content: "";
+            display: block;
+            height: 5px;
+            margin-top: .6rem;
+            width: 3.5rem;
+            border-radius: 9px;
+            background: linear-gradient(90deg, var(--lima), var(--turq));
+            transition: width .7s var(--suave);
+        }
+        section:hover h2::after { width: 100%; }
+
+        section p {
+            max-width: 52ch;
+            margin: 0;
+            color: color-mix(in oklab, var(--ink) 82%, transparent);
+        }
+        section p::first-letter {
+            font-family: var(--titulo);
+            font-weight: 800;
+            font-size: 1.35em;
+            color: var(--lima);
+        }
+
+        /* ---------- Extras de cada sección ---------- */
+        .datos {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .7rem;
+            margin: 1.8rem 0 0;
+            padding: 0;
+        }
+        .datos li {
+            display: grid;
+            gap: .1rem;
+            padding: .8rem 1.1rem;
+            border-radius: 18px;
+            background: rgb(255 255 255 / .06);
+            border: 1px solid rgb(255 255 255 / .1);
+            transition: transform .4s var(--suave), background .4s;
+        }
+        .datos li:hover { transform: translateY(-4px) rotate(-1.5deg); background: rgb(255 255 255 / .12); }
+        .datos small { font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; color: var(--mute); }
+        .datos b     { font-family: var(--titulo); font-size: 1.15rem; color: var(--lima); }
+
+        .dias {
+            display: flex;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        .dias span {
+            position: relative;
+            display: grid; place-items: center;
+            width: 3.4rem; aspect-ratio: 1;
+            border-radius: 50%;
+            font: 800 1.1rem var(--titulo);
+            color: #04210f;
+            background: linear-gradient(135deg, var(--lima), var(--verde));
+            box-shadow: 0 8px 24px color-mix(in oklab, var(--verde) 40%, transparent);
+        }
+        .dias span + span { margin-left: 3.2rem; }
+        .dias span + span::before {
+            content: "";
+            position: absolute;
+            right: 100%;
+            width: 3.2rem; height: 3px;
+            background: linear-gradient(90deg, var(--verde), var(--lima));
+        }
+        .dias span:last-child { animation: pulso 2s infinite; color: #04210f; background: linear-gradient(135deg, var(--sol), var(--lima)); }
+        .dias em { margin-left: 1.2rem; font-style: italic; font-family: var(--titulo); color: var(--mute); }
+
+        .paleta {
+            display: flex;
+            margin-top: 2rem;
+        }
+        .paleta i {
+            width: 3.2rem; aspect-ratio: 1;
+            border-radius: 50%;
+            margin-left: -.7rem;
+            border: 3px solid #0b2a1d;
+            background: var(--c);
+            box-shadow: 0 10px 22px rgb(0 0 0 / .35);
+            transition: transform .45s var(--suave), margin .45s var(--suave);
+        }
+        .paleta i:first-child { margin-left: 0; }
+        .paleta:hover i { margin-left: .5rem; }
+        .paleta:hover i:first-child { margin-left: 0; }
+        .paleta i:hover { transform: translateY(-10px) scale(1.2); }
+
+        /* container query: los chips se adaptan al ancho de su tarjeta */
+        @container (max-width: 480px) {
+            .datos li { flex: 1 1 100%; }
+            .dias em  { display: none; }
+        }
+
+
+        @supports (animation-timeline: view()) {
+            .progreso {
+                animation: crece linear both;
+                animation-timeline: scroll(root);
+            }
+            @keyframes crece { to { transform: scaleX(1); } }
+
+            section {
+                animation: aparece linear both;
+                animation-timeline: view();
+                animation-range: entry 0% cover 32%;
+            }
+            @keyframes aparece {
+                from { opacity: 0; transform: translateY(90px) scale(.92) rotateX(10deg); filter: blur(12px); }
+                to   { opacity: 1; transform: none;                                       filter: blur(0);    }
+            }
+
+            .ave {
+                animation: parallax linear both;
+                animation-timeline: scroll(root);
+                animation-range: 0 100vh;
+            }
+            @keyframes parallax { to { transform: translateY(140px) scale(.85) rotate(6deg); opacity: .25; } }
+
+            .hero-texto {
+                animation: se-va linear both;
+                animation-timeline: scroll(root);
+                animation-range: 0 80vh;
+            }
+            @keyframes se-va { to { transform: translateY(-60px); opacity: 0; filter: blur(8px); } }
+        }
+
+
+        @media (max-width: 860px) {
+            header { grid-template-columns: 1fr; text-align: center; padding-top: 7rem; }
+            header .hero-texto > p { margin-inline: auto; }
+            .ave { order: -1; max-width: 340px; margin-inline: auto; }
+            .desliza { display: none; }
+            section:nth-of-type(n) { margin-inline: 0; }
+            nav { top: auto; bottom: 1rem; }
+            nav button { padding: .75rem .95rem; font-size: .85rem; }
+            @keyframes baja-nav { from { translate: -50% 140%; opacity: 0; } }
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+            .plumas { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progreso" aria-hidden="true"></div>
+
+    <header>
+        <div class="plumas" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="hero-texto">
+            <span class="etiqueta"><i></i> Perico atolero</span>
+            <h1>Chaparrita</h1>
+            <p>La chaparrita es mi ave.</p>
+            <span class="desliza">Desliza</span>
+        </div>
+
+        <figure class="ave" aria-label="Ilustración de la chaparrita, un perico atolero">
+            <svg viewBox="0 0 400 420" role="img" aria-hidden="true">
+                <defs>
+                    <linearGradient id="gCuerpo" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#8CF58F"/>
+                        <stop offset="1" stop-color="#1FA55B"/>
+                    </linearGradient>
+                    <linearGradient id="gCabeza" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0"  stop-color="#D8FF55"/>
+                        <stop offset=".6" stop-color="#5BE27E"/>
+                        <stop offset="1"  stop-color="#2BBE6C"/>
+                    </linearGradient>
+                    <linearGradient id="gAla" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0"  stop-color="#17A35B"/>
+                        <stop offset=".6" stop-color="#0E8F78"/>
+                        <stop offset="1"  stop-color="#2563EB"/>
+                    </linearGradient>
+                    <linearGradient id="gCola" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#1FB5A0"/>
+                        <stop offset="1" stop-color="#3B82F6"/>
+                    </linearGradient>
+                    <linearGradient id="gPico" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#FFE9CF"/>
+                        <stop offset="1" stop-color="#F0A678"/>
+                    </linearGradient>
+                    <linearGradient id="gRama" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#8A5A3B"/>
+                        <stop offset="1" stop-color="#4B2E1E"/>
+                    </linearGradient>
+                    <radialGradient id="gVientre" cx=".5" cy=".4" r=".6">
+                        <stop offset="0" stop-color="#F2FFA8" stop-opacity=".9"/>
+                        <stop offset="1" stop-color="#F2FFA8" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+
+                <!-- rama -->
+                <path d="M10 338 Q200 316 392 326" fill="none" stroke="url(#gRama)" stroke-width="18" stroke-linecap="round"/>
+                <path d="M300 326 q26 -44 78 -34 q-8 44 -78 34z" fill="#1FA55B"/>
+                <path d="M300 326 q30 -30 66 -30" fill="none" stroke="#C8F542" stroke-width="2" opacity=".7"/>
+                <path d="M60 332 q-10 -40 -46 -44 q2 40 46 44z" fill="#2BBE6C"/>
+
+                <!-- cola -->
+                <path d="M158 282 L120 392 Q146 402 168 376 L206 292Z" fill="url(#gCola)"/>
+                <path d="M158 282 L138 372 M178 288 L152 384" stroke="#0B3B5E" stroke-width="2" opacity=".35"/>
+
+                <!-- patitas -->
+                <path d="M188 320 v10 M200 321 v10 M222 321 v10 M234 320 v10" stroke="#E9A97F" stroke-width="5" stroke-linecap="round"/>
+
+                <!-- cuerpo -->
+                <ellipse cx="206" cy="224" rx="74" ry="104" transform="rotate(22 206 224)" fill="url(#gCuerpo)"/>
+                <ellipse cx="236" cy="246" rx="44" ry="66"  transform="rotate(22 236 246)" fill="url(#gVientre)"/>
+
+                <!-- rabadilla azul (rasgo del atolero) -->
+                <path d="M150 290 Q176 262 198 292 Q176 320 150 290Z" fill="#3B82F6" opacity=".9"/>
+
+                <!-- ala -->
+                <path d="M168 186 Q236 170 256 246 Q240 322 182 306 Q146 252 168 186Z" fill="url(#gAla)"/>
+                <path d="M184 220 Q218 214 230 262 M178 244 Q210 244 218 290" fill="none" stroke="#C8F542" stroke-width="2.2" stroke-linecap="round" opacity=".45"/>
+                <path d="M182 306 Q206 318 232 296" fill="none" stroke="#7DB5FF" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+
+                <!-- cabeza -->
+                <g class="cabeza">
+                    <circle cx="262" cy="142" r="60" fill="url(#gCabeza)"/>
+                    <ellipse cx="248" cy="112" rx="26" ry="14" fill="#fff" opacity=".18" transform="rotate(-25 248 112)"/>
+                    <ellipse cx="282" cy="162" rx="16" ry="11" fill="#FFB454" opacity=".35"/>
+                    <!-- pico -->
+                    <path d="M314 138 Q344 142 336 170 Q316 178 304 160Z" fill="url(#gPico)"/>
+                    <path d="M310 156 Q324 160 334 164" stroke="#C27B52" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <circle cx="326" cy="148" r="2.2" fill="#8A4F2E"/>
+                    <!-- ojo -->
+                    <g class="ojo">
+                        <circle cx="288" cy="128" r="11" fill="#0B1F17"/>
+                        <circle cx="291" cy="124" r="3.6" fill="#fff"/>
+                    </g>
+                </g>
+            </svg>
+        </figure>
+
+        <nav aria-label="Secciones">
+            <button onclick="irA('quienn')">¿Quién es?</button>
+            <button onclick="irA('Cuando')">¿Cuando la conocí?</button>
+            <button onclick="irA('Hermosa')">Su belleza</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="quienn">
+            <h2>¿Quién es?</h2>
+            <p>La chaparrita es una ave pequeña y adorableeeeee. Su plumaje es colorido y en general muy hermosa, me encanta su plumaje pero es muy miedosa.</p>
+            <ul class="datos">
+                <li><small>Especie</small><b>Perico atolero</b></li>
+                <li><small>Tamaño</small><b>Pequeñita</b></li>
+                <li><small>Carácter</small><b>Miedosa</b></li>
+            </ul>
+        </section>
+
+        <section id="Cuando">
+            <h2>¿Cuándo la conocí?</h2>
+            <p>La conocí hace 3 dias, mi papa me la trajo.</p>
+            <div class="dias" aria-label="Hace tres días">
+                <span>1</span><span>2</span><span>3</span><em>¡y hoy sigue aquí!</em>
+            </div>
+        </section>
+
+        <section id="Hermosa">
+            <h2>Su belleza</h2>
+            <p>Es una ave muy hermosa, con un plumaje colorido y miedosa .</p>
+            <div class="paleta" aria-label="Colores de su plumaje">
+                <i style="--c:#C8F542"></i>
+                <i style="--c:#3DDC84"></i>
+                <i style="--c:#1FA55B"></i>
+                <i style="--c:#22D3C5"></i>
+                <i style="--c:#3B82F6"></i>
+                <i style="--c:#FFB454"></i>
+            </div>
+        </section>
+
+            <script>
+                function irA(idseccion) {
+                    
+                    const elemento = document.getElementById(idseccion);
+                    if (elemento) {
+                        elemento.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            </script>
+        
+    </main>
+</body>
+</html>
